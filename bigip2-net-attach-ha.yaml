@@ -2,14 +2,14 @@ apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
   name: bigip2-ha
-  namespace: f5-bigip
+  namespace: f5-bigip-mmabis
 spec:
   config: '{
     "cniVersion": "0.3.1",
     "name": "bigip2-ha", 
     "type": "ovn-k8s-cni-overlay",
     "topology": "localnet",
-    "netAttachDefName": "f5-bigip/bigip2-ha",
+    "netAttachDefName": "f5-bigip-mmabis/bigip2-ha",
     "vlanID": 3012,
     "ipam": {}
   }'

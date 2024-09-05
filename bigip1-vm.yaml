@@ -2,7 +2,7 @@ apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
   name: bigip1
-  namespace: f5-bigip
+  namespace: f5-bigip-mmabis
   labels:
     f5type: bigip-ve
   annotations:

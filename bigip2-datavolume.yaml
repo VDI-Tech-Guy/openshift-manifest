@@ -2,7 +2,7 @@ apiVersion: cdi.kubevirt.io/v1beta1
 kind: DataVolume
 metadata:
   name: bigip2-datavolume
-  namespace: f5-bigip
+  namespace: f5-bigip-mmabis
 spec:
   source:
     http:
