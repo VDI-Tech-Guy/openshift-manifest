@@ -1,0 +1,27 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  annotations:
+    machineconfiguration.openshift.io/mc-name-suffix: ""
+  creationTimestamp: "2024-06-11T13:28:42Z"
+  finalizers:
+  - 99-worker-generated-kubelet
+  generation: 1
+  name: cpumanager-enabled
+  resourceVersion: "10409296"
+  uid: afbcde5a-71bc-432a-88f0-b40516cf027e
+spec:
+  kubeletConfig:
+    cpuManagerPolicy: static
+    cpuManagerReconcilePeriod: 5s
+    cpuManagerPolicyOptions:
+      full-pcpus-only: "true"
+  machineConfigPoolSelector:
+    matchLabels:
+      custom-kubelet: cpumanager-enabled
+status:
+  conditions:
+  - lastTransitionTime: "2024-06-11T13:28:43Z"
+    message: Success
+    status: "True"
+    type: Success
