@@ -5,3 +5,7 @@ oc apply -f bigip2-net-attach-ext.yaml -f bigip2-net-attach-int.yaml -f bigip2-n
 #Build VMs
 oc apply -f bigip1-datavolume.yaml -f bigip1-vm.yaml
 oc apply -f bigip2-datavolume.yaml -f bigip2-vm.yaml
+
+#Pause VMs
+while ! virtctl -n f5-bigip pause vm bigip1 ; do sleep 1 ; done
+while ! virtctl -n f5-bigip pause vm bigip2 ; do sleep 1 ; done
