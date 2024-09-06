@@ -1,0 +1,20 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: bigip1-datavolume
+  namespace: f5-bigip
+spec:
+  source:
+    http:
+      url: "http://192.170.10.200/BIGIP-17.1.1.2-0.0.10.qcow2"
+#    registry:
+#      url: "docker://default-route-openshift-image-registry.apps.ocp.f5-udf.com/registry-images/bigip-v17:latest"
+#      certConfigMap: tls-certs
+#      secretRef: regcred
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 150Gi
+#    storageClassName: localblock-sc

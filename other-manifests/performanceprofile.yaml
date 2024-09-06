@@ -1,0 +1,10 @@
+apiVersion: performance.openshift.io/v2
+kind: PerformanceProfile
+metadata:
+  name: performance-bigip
+spec:
+  numa:
+    topologyPolicy: "single-numa-node"
+  nodeSelector:
+    node-role.kubernetes.io/performance: ''
+

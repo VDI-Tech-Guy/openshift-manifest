@@ -1,0 +1,105 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: bigip2
+  namespace: f5-bigip
+  labels:
+    f5type: bigip-ve
+  annotations:
+    k8s.v1.cni.cncf.io/networks: "bigip2-mgmt,bigip2-ha,bigip2-ext,bigip2-int"
+    # Low latency settings https://docs.openshift.com/container-platform/4.15/scalability_and_performance/low_latency_tuning/cnf-provisioning-low-latency-workloads.html#cnf-configuring-high-priority-workload-pods_cnf-provisioning-low-latency
+    cpu-quota.crio.io: "disable" 
+    cpu-load-balancing.crio.io: "disable" 
+    irq-load-balancing.crio.io: "disable" 
+spec:
+  runStrategy: Always
+  template:
+    metadata:
+      labels:
+        f5type: bigip-ve
+        bigip-unit: unit-2
+    spec:
+      nodeName: sjc-bd-host-105
+      affinity:
+        podAntiAffinity:
+          RequiredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: "bigip-unit"
+                  operator: In
+                  values:
+                  - unit-1
+              topologyKey: "kubernetes.io/hostname"
+      domain:
+        cpu:
+          sockets: 1
+          # Adjust cores to the desired number of vCPUs
+          cores: 4
+          threads: 1
+          dedicatedCpuPlacement: true
+        resources:
+          # memory must be 2Gi per core at least
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
+        devices:
+          networkInterfaceMultiqueue: true
+          disks:
+          - name: bigip2-datavolume
+            disk:
+              bus: virtio
+          - name: cloudinitvolume
+            disk:
+              bus: virtio
+          interfaces:
+          - name: mgmt
+            bridge: {}
+          - name: int
+            bridge: {}
+          - name: ext
+            bridge: {}
+          - name: ha
+            bridge: {}
+      volumes:
+      - name: bigip2-datavolume
+        dataVolume:
+          name: "bigip2-datavolume"
+      - name: cloudinitvolume
+        cloudInitConfigDrive:
+          userData: |-
+            #cloud-config
+            write_files:
+              - path: /config/cloud/config.sh
+                permissions: 0755
+                owner: root:root
+                content: |
+                  #!/bin/bash
+                  echo "ndal mtu 1400 1af4:1041" >> /config/tmm_init.tcl
+
+                  source /usr/lib/bigstart/bigip-ready-functions
+                  wait_bigip_ready
+                  tmsh save /sys config
+                  tmsh modify sys global-settings mgmt-dhcp disabled
+                  tmsh create sys management-ip 192.170.7.202/24
+                  tmsh create sys management-route default gateway 192.170.7.1
+                  tmsh modify sys global-settings hostname bigip2.ocp.f5-udf.com
+                  tmsh save sys config
+            runcmd:
+              # NOTE: Commands must be non-blocking so send long running commands (polling/waiting for mcpd) to the background
+              - /config/cloud/config.sh &
+      networks:
+      - name: mgmt
+        multus:
+          networkName: bigip2-mgmt
+      - name: int
+        multus:
+          networkName: bigip2-int
+      - name: ext
+        multus:
+          networkName: bigip2-ext
+      - name: ha
+        multus:
+          networkName: bigip2-ha
+
