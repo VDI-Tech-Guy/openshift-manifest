@@ -1,6 +1,0 @@
----
-spec:
-  kubeletConfig:
-    cpuManagerPolicy: static
-    cpuManagerPolicyOptions:
-      full-pcpus-only: "true"
