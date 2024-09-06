@@ -16,5 +16,5 @@ spec:
       - ReadWriteOnce
     resources:
       requests:
-        storage: 150Gi
+        storage: 75Gi
 #    storageClassName: localblock-sc

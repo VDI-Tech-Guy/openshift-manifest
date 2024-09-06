@@ -10,7 +10,7 @@ spec:
     "type": "ovn-k8s-cni-overlay",
     "topology": "localnet",
     "netAttachDefName": "f5-bigip-mmabis/bigip2-ext",
-    "vlanID": 3011,
+    "vlanID": 3006,
     "ipam": {}
   }'
 

@@ -81,9 +81,9 @@ spec:
                   wait_bigip_ready
                   tmsh save /sys config
                   tmsh modify sys global-settings mgmt-dhcp disabled
-                  tmsh create sys management-ip 192.170.7.202/24
-                  tmsh create sys management-route default gateway 192.170.7.1
-                  tmsh modify sys global-settings hostname bigip2.ocp.f5-udf.com
+                  tmsh create sys management-ip 192.170.4.192/24
+                  tmsh create sys management-route default gateway 192.170.4.1
+                  tmsh modify sys global-settings hostname Lab-BIP-BIGIP-16.1.3-Lab-002.bd.f5.com
                   tmsh save sys config
             runcmd:
               # NOTE: Commands must be non-blocking so send long running commands (polling/waiting for mcpd) to the background
